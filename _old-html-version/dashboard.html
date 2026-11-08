@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store dashboard preview | Boxes & Papers by Kaffy</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    body { background: #F7F1F2; }
+    .app { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 37px); }
+    .side { background: var(--wine); color: #fff; padding: 24px 16px; display: flex; flex-direction: column; gap: 28px; }
+    .side .logo-text { color: #fff; font-size: 1rem; }
+    .side .logo-text small { color: rgba(255,255,255,.6); }
+    .side nav { display: grid; gap: 4px; }
+    .side nav a { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 10px; text-decoration: none; color: rgba(255,255,255,.75); font-weight: 600; font-size: .95rem; }
+    .side nav a[aria-current="page"], .side nav a:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .side nav svg { width: 20px; height: 20px; }
+    .side .badge { margin-left: auto; background: var(--blush); color: var(--wine); border-radius: 999px; font-size: .75rem; padding: 1px 8px; font-weight: 700; }
+    .who { margin-top: auto; background: rgba(255,255,255,.08); border-radius: 14px; padding: 14px; font-size: .88rem; }
+    .who b { display: block; }
+    .who span { color: rgba(255,255,255,.65); }
+    .main { padding: 28px 32px 48px; display: grid; gap: 24px; align-content: start; min-width: 0; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .top h1 { font-size: 1.9rem; }
+    .top p { color: var(--muted); }
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .kpi { background: #fff; border-radius: 16px; padding: 20px; border: 1px solid var(--line); }
+    .kpi small { color: var(--muted); font-weight: 600; }
+    .kpi strong { display: block; font-family: var(--display); font-size: 1.9rem; margin-top: 6px; line-height: 1.1; }
+    .kpi span { font-size: .85rem; font-weight: 600; color: #1F9D61; }
+    .kpi.alert { background: #FFF6E5; border-color: #F1D9A6; }
+    .kpi.alert span { color: #B26F00; }
+    .panel { background: #fff; border-radius: 18px; border: 1px solid var(--line); overflow: hidden; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; border-bottom: 1px solid var(--line); gap: 12px; flex-wrap: wrap; }
+    .panel-head h2 { font-size: 1.2rem; max-width: none; }
+    .panel-head p { color: var(--muted); font-size: .88rem; }
+    .scroll { overflow-x: auto; }
+    table.data { width: 100%; border-collapse: collapse; font-size: .93rem; min-width: 720px; }
+    .data th { text-align: left; font-weight: 600; color: var(--muted); padding: 12px 22px; background: #FCF8F8; }
+    .data td { padding: 14px 22px; border-top: 1px solid var(--line); vertical-align: middle; }
+    .data td b { display: block; }
+    .data td small { color: var(--muted); }
+    .status { border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; font-weight: 600; font-size: .85rem; background: #fff; cursor: pointer; }
+    .status.paid { background: #E5F2EC; color: #17724A; border-color: #BFE0CF; }
+    .status.packed { background: #EAF0FB; color: #2F53A3; border-color: #C9D6F1; }
+    .status.shipped { background: #F3EAFB; color: #6B3BA3; border-color: #DCCAF0; }
+    .status.pending { background: #FFF6E5; color: #9A6000; border-color: #F1D9A6; }
+    .grid-2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: start; }
+    .stock-row { display: grid; grid-template-columns: 1fr 120px 116px; gap: 16px; align-items: center; padding: 14px 22px; border-top: 1px solid var(--line); }
+    .stock-row:first-child { border-top: 0; }
+    .bar { height: 8px; background: #F1E6E8; border-radius: 999px; overflow: hidden; }
+    .bar i { display: block; height: 100%; background: var(--crimson); border-radius: inherit; }
+    .bar.low i { background: #D98A00; }
+    .stock-row small { color: var(--muted); }
+    .stepper { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+    .stepper button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: #fff; cursor: pointer; font-weight: 700; }
+    .stepper output { min-width: 48px; text-align: center; font-weight: 700; }
+    .low-tag { color: #B26F00; font-weight: 700; font-size: .8rem; }
+    .quotes { display: grid; }
+    .quote { padding: 16px 22px; border-top: 1px solid var(--line); display: grid; gap: 4px; }
+    .quote:first-child { border-top: 0; }
+    .quote div { display: flex; justify-content: space-between; gap: 12px; }
+    .quote small { color: var(--muted); }
+    .quote a { color: #128C4A; font-weight: 700; text-decoration: none; font-size: .9rem; }
+    .staff { padding: 6px 22px 18px; display: grid; gap: 0; }
+    .member { display: flex; gap: 14px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
+    .member:first-child { border-top: 0; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; background: var(--crimson); flex: none; }
+    .avatar.staff-av { background: #1F2A44; }
+    .member small { display: block; color: var(--muted); }
+    .role { margin-left: auto; font-size: .82rem; font-weight: 700; border-radius: 999px; padding: 4px 12px; background: var(--blush); color: var(--crimson-deep); white-space: nowrap; }
+    .role.mgr { background: #E6EBF5; color: #1F2A44; }
+    .perm { font-size: .85rem; color: var(--muted); padding: 0 22px 20px; }
+    .back { font-weight: 700; color: var(--crimson); text-decoration: none; }
+    @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) {
+      .app { grid-template-columns: 1fr; }
+      .side { flex-direction: row; align-items: center; overflow-x: auto; padding: 14px 16px; gap: 16px; }
+      .side nav { display: flex; gap: 4px; }
+      .side nav a span.label { display: none; }
+      .side .who, .side .badge { display: none; }
+      .main { padding: 20px 16px 40px; }
+      .kpi strong { font-size: 1.5rem; }
+      .stock-row { grid-template-columns: 1fr; gap: 8px; }
+      .stepper { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-bar"><strong>Dashboard preview</strong> with demo orders. In the live store, this fills with real orders and works from Kaffy's phone.</div>
+
+  <div class="app">
+    <aside class="side">
+      <a href="index.html" class="logo"><span class="logo-mark" aria-hidden="true"></span><span class="logo-text">Kaffy Admin <small>TBL Kaffy Resources</small></span></a>
+      <nav aria-label="Dashboard">
+        <a href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="label">Overview</span></a>
+        <a href="#orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="label">Orders</span><span class="badge">3 new</span></a>
+        <a href="#stock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8 12 3l9 5v8l-9 5-9-5Z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg><span class="label">Products & stock</span></a>
+        <a href="#quotes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v11H8l-4 4Z"/></svg><span class="label">Quote requests</span><span class="badge">2</span></a>
+        <a href="#staff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></svg><span class="label">Staff</span></a>
+      </nav>
+      <div class="who"><b>Signed in as Kaffy</b><span>Owner · full access</span></div>
+    </aside>
+
+    <main class="main">
+      <div class="top">
+        <div>
+          <h1>Good afternoon, Kaffy</h1>
+          <p>Here's how the store is doing today.</p>
+        </div>
+        <a href="index.html" class="back">View website</a>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><small>Sales today</small><strong>₦1,842,500</strong><span>Paid online and by transfer</span></div>
+        <div class="kpi"><small>New orders</small><strong>7</strong><span>3 waiting to be packed</span></div>
+        <div class="kpi"><small>Quote requests</small><strong>2</strong><span>From the bulk quote form</span></div>
+        <div class="kpi alert"><small>Low stock</small><strong>1 item</strong><span>Notebook sets below 700</span></div>
+      </div>
+
+      <section class="panel" id="orders" style="padding:0">
+        <div class="panel-head">
+          <div><h2>Recent orders</h2><p>Change an order's status and the customer can be notified.</p></div>
+        </div>
+        <div class="scroll">
+          <table class="data">
+            <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="grid-2">
+        <section class="panel" id="stock" style="padding:0">
+          <div class="panel-head">
+            <div><h2>Stock levels</h2><p>Stock drops automatically when an order is paid. Adjust it here after a restock.</p></div>
+          </div>
+          <div id="stockList"></div>
+        </section>
+
+        <div style="display:grid;gap:24px">
+          <section class="panel" id="quotes" style="padding:0">
+            <div class="panel-head"><h2>Bulk quote requests</h2></div>
+            <div class="quotes">
+              <div class="quote">
+                <div><b>Events by Tolu</b><small>Event planner</small></div>
+                <small>300 pcs heart rose box · Abuja (FCT) · needed 10 Feb</small>
+                <a href="#">Reply on WhatsApp</a>
+              </div>
+              <div class="quote">
+                <div><b>Brightline Logistics</b><small>Company</small></div>
+                <small>1,000+ notebook sets with logo · Lagos · needed 15 Dec</small>
+                <a href="#">Reply on WhatsApp</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="staff" style="padding:0">
+            <div class="panel-head"><h2>Staff access</h2></div>
+            <div class="staff">
+              <div class="member"><span class="avatar">K</span><div><b>Kaffy</b><small>Owner</small></div><span class="role">Full access</span></div>
+              <div class="member"><span class="avatar staff-av">S</span><div><b>Shop staff</b><small>Staff account</small></div><span class="role mgr">Orders & stock</span></div>
+            </div>
+            <p class="perm">Staff can process orders and update stock. Only the owner can change prices, see total revenue and manage payouts.</p>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/products.js"></script>
+  <script>
+    (function () {
+      const ORDERS = [
+        { id: "#KF-1048", name: "Amaka Stores", type: "Retailer · Onitsha", items: "500 × Printed gift bags", total: 170000, pay: "Paystack · Card", status: "paid" },
+        { id: "#KF-1047", name: "Grace Events", type: "Event planner · Ibadan", items: "200 × Heart rose box", total: 860000, pay: "Paystack · Transfer", status: "packed" },
+        { id: "#KF-1046", name: "Zenith Hampers", type: "Gift business · Abuja", items: "100 × Quilted gift box", total: 590000, pay: "Paystack · USSD", status: "shipped" },
+        { id: "#KF-1045", name: "Mrs Adeyemi", type: "Individual · Lagos", items: "50 × Wrapping paper rolls", total: 45000, pay: "Bank transfer", status: "pending" },
+        { id: "#KF-1044", name: "Kano Gift Hub", type: "Distributor · Kano", items: "1,000 × Magnetic box", total: 2600000, pay: "Paystack · Transfer", status: "shipped" }
+      ];
+      const STATUSES = { pending: "Awaiting payment", paid: "Paid · to pack", packed: "Packed", shipped: "Shipped" };
+
+      let toastTimer;
+      function toast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg; t.classList.add("show");
+        clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+      }
+
+      document.getElementById("ordersBody").innerHTML = ORDERS.map(o => `
+        <tr>
+          <td><b>${o.id}</b><small>Today</small></td>
+          <td><b>${o.name}</b><small>${o.type}</small></td>
+          <td>${o.items}</td>
+          <td><b>${naira(o.total)}</b></td>
+          <td>${o.pay}</td>
+          <td>
+            <select class="status ${o.status}" aria-label="Status for order ${o.id}" data-order="${o.id}">
+              ${Object.entries(STATUSES).map(([k, v]) => `<option value="${k}" ${k === o.status ? "selected" : ""}>${v}</option>`).join("")}
+            </select>
+          </td>
+        </tr>`).join("");
+
+      document.getElementById("ordersBody").addEventListener("change", e => {
+        const s = e.target;
+        if (!s.classList.contains("status")) return;
+        s.className = "status " + s.value;
+        toast(`Order ${s.dataset.order} marked as ${STATUSES[s.value].toLowerCase()}`);
+      });
+
+      const stock = Object.fromEntries(PRODUCTS.map(p => [p.id, p.stock]));
+      const MAX = 12000, LOW = 700;
+      function renderStock() {
+        document.getElementById("stockList").innerHTML = PRODUCTS.map(p => {
+          const q = stock[p.id], low = q < LOW;
+          const pct = Math.max(3, Math.min(100, (q / (p.id === "gift-bags" ? MAX : 4000)) * 100));
+          return `<div class="stock-row">
+            <div><b>${p.name}</b><br><small>${naira(p.tiers[0])} – ${naira(p.tiers[3])} per piece</small> ${low ? '<span class="low-tag">Restock soon</span>' : ""}</div>
+            <div class="bar ${low ? "low" : ""}"><i style="width:${pct}%"></i></div>
+            <div class="stepper">
+              <button data-dec="${p.id}" aria-label="Reduce ${p.name} stock by 50">−</button>
+              <output>${q.toLocaleString("en-NG")}</output>
+              <button data-inc="${p.id}" aria-label="Add 50 to ${p.name} stock">+</button>
+            </div>
+          </div>`;
+        }).join("");
+      }
+      document.getElementById("stockList").addEventListener("click", e => {
+        const t = e.target;
+        if (t.dataset.inc) stock[t.dataset.inc] += 50;
+        else if (t.dataset.dec) stock[t.dataset.dec] = Math.max(0, stock[t.dataset.dec] - 50);
+        else return;
+        renderStock();
+      });
+      renderStock();
+    })();
+  </script>
+</body>
+</html>
