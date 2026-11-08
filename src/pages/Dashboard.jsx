@@ -59,12 +59,12 @@ function Orders() {
           <tbody>
             {orders.map((o) => (
               <tr key={o.id}>
-                <td><b>{o.id}</b><small>Today</small></td>
-                <td><b>{o.name}</b><small>{o.type}</small></td>
-                <td>{o.items}</td>
-                <td><b>{naira(o.total)}</b></td>
-                <td>{o.pay}</td>
-                <td>
+                <td data-label="Order"><b>{o.id}</b><small>Today</small></td>
+                <td data-label="Customer"><b>{o.name}</b><small>{o.type}</small></td>
+                <td data-label="Items">{o.items}</td>
+                <td data-label="Total"><b>{naira(o.total)}</b></td>
+                <td data-label="Payment">{o.pay}</td>
+                <td data-label="Status">
                   <select className={`status ${o.status}`} value={o.status} aria-label={`Status for order ${o.id}`}
                     onChange={(e) => updateStatus(o.id, e.target.value)}>
                     {Object.entries(STATUSES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}

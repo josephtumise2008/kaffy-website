@@ -68,14 +68,29 @@ table.data { width: 100%; border-collapse: collapse; font-size: .93rem; min-widt
 .back { font-weight: 700; color: var(--crimson); text-decoration: none; }
 @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } }
 @media (max-width: 760px) {
-  .app { grid-template-columns: 1fr; }
-  .side { flex-direction: row; align-items: center; overflow-x: auto; padding: 14px 16px; gap: 16px; }
-  .side nav { display: flex; gap: 4px; }
-  .side nav a span.label { display: none; }
-  .side .who, .side .badge { display: none; }
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side, .main { min-width: 0; }
+  .side { flex-direction: column; align-items: stretch; padding: 14px 16px; gap: 12px; }
+  .side nav { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .side nav::-webkit-scrollbar { display: none; }
+  .side nav a { flex: none; white-space: nowrap; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.08); font-size: .88rem; }
+  .side nav .badge { margin-left: 6px; }
+  .side .who { display: none; }
   .main { padding: 20px 16px 40px; }
+  .top h1 { font-size: 1.6rem; }
   .kpi strong { font-size: 1.5rem; }
   .stock-row { grid-template-columns: 1fr; gap: 8px; }
   .stepper { justify-content: flex-start; }
 }
-  
+
+/* Orders as cards on phones, so the status dropdown is always visible */
+@media (max-width: 760px) {
+  table.data { min-width: 0; }
+  .data thead { display: none; }
+  .data tr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; padding: 16px 18px; border-top: 1px solid var(--line); }
+  .data td { padding: 0; border: 0; }
+  .data td::before { content: attr(data-label); display: block; font-size: .78rem; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+  .data td[data-label="Order"]::before, .data td[data-label="Customer"]::before { display: none; }
+  .data td[data-label="Items"], .data td[data-label="Status"] { grid-column: 1 / -1; }
+  .data td[data-label="Status"] .status { width: 100%; padding: 10px 12px; font-size: .92rem; }
+}
